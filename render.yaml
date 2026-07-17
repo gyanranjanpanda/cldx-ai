@@ -18,18 +18,30 @@ services:
           name: cldx-redis
           property: connectionString
       - key: AUTH_SERVICE
-        value: http://cldx-auth:8001
+        fromService:
+          type: web
+          name: cldx-auth
+          property: host
       - key: CHAT_SERVICE
-        value: http://cldx-chat:8002
+        fromService:
+          type: web
+          name: cldx-chat
+          property: host
       - key: AGENT_SERVICE
-        value: http://cldx-agent:8003
+        fromService:
+          type: web
+          name: cldx-agent
+          property: host
       - key: BILLING_SERVICE
-        value: http://cldx-billing:8004
+        fromService:
+          type: web
+          name: cldx-billing
+          property: host
 
   # ---------------------------------------------------------
-  # 2. AUTH SERVICE (Private Service)
+  # 2. AUTH SERVICE (Web Service)
   # ---------------------------------------------------------
-  - type: private
+  - type: web
     name: cldx-auth
     env: node
     plan: free
@@ -38,23 +50,26 @@ services:
     startCommand: cd services/auth && node index.js
     envVars:
       - key: PORT
-        value: 8001
+        value: 10000
       - key: REDIS_URL
         fromService:
           type: redis
           name: cldx-redis
           property: connectionString
       - key: MONGODB_URL
-        sync: false # User provides their MongoDB Atlas connection string
+        sync: false
       - key: FRONTEND_URL
-        value: https://cldx-frontend.onrender.com
+        fromService:
+          type: web
+          name: cldx-frontend
+          property: host
       - key: FIREBASE_SERVICE_ACCOUNT_JSON
-        sync: false # Set as environment variable on Render (alternative to serviceAccount.json)
+        sync: false
 
   # ---------------------------------------------------------
-  # 3. CHAT SERVICE (Private Service)
+  # 3. CHAT SERVICE (Web Service)
   # ---------------------------------------------------------
-  - type: private
+  - type: web
     name: cldx-chat
     env: node
     plan: free
@@ -63,14 +78,14 @@ services:
     startCommand: cd services/chat && node index.js
     envVars:
       - key: PORT
-        value: 8002
+        value: 10000
       - key: MONGODB_URL
         sync: false
 
   # ---------------------------------------------------------
-  # 4. AGENT SERVICE (Private Service)
+  # 4. AGENT SERVICE (Web Service)
   # ---------------------------------------------------------
-  - type: private
+  - type: web
     name: cldx-agent
     env: node
     plan: free
@@ -79,7 +94,7 @@ services:
     startCommand: cd services/agent && node index.js
     envVars:
       - key: PORT
-        value: 8003
+        value: 10000
       - key: REDIS_URL
         fromService:
           type: redis
@@ -98,16 +113,25 @@ services:
       - key: QDRANT_API_KEY
         sync: false
       - key: CHAT_SERVICE
-        value: http://cldx-chat:8002
+        fromService:
+          type: web
+          name: cldx-chat
+          property: host
       - key: AUTH_SERVICE
-        value: http://cldx-auth:8001
+        fromService:
+          type: web
+          name: cldx-auth
+          property: host
       - key: GATEWAY_URL
-        value: https://cldx-gateway.onrender.com
+        fromService:
+          type: web
+          name: cldx-gateway
+          property: host
 
   # ---------------------------------------------------------
-  # 5. BILLING SERVICE (Private Service)
+  # 5. BILLING SERVICE (Web Service)
   # ---------------------------------------------------------
-  - type: private
+  - type: web
     name: cldx-billing
     env: node
     plan: free
@@ -116,18 +140,21 @@ services:
     startCommand: cd services/billing && node index.js
     envVars:
       - key: PORT
-        value: 8004
+        value: 10000
       - key: MONGODB_URL
         sync: false
       - key: AUTH_SERVICE
-        value: http://cldx-auth:8001
+        fromService:
+          type: web
+          name: cldx-auth
+          property: host
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
 
   # ---------------------------------------------------------
-  # 6. FRONTEND (Public Static Site)
+  # 6. FRONTEND (Static Site)
   # ---------------------------------------------------------
   - type: web
     name: cldx-frontend
@@ -135,7 +162,7 @@ services:
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_FIREBASE_API_KEY
         sync: false
@@ -150,14 +177,16 @@ services:
       - key: VITE_FIREBASE_APP_ID
         sync: false
       - key: VITE_SERVER_URL
-        value: https://cldx-gateway.onrender.com
+        fromService:
+          type: web
+          name: cldx-gateway
+          property: host
       - key: VITE_RAZORPAY_KEY
         sync: false
 
-# ---------------------------------------------------------
-# 7. REDIS DATABASE (Free Cache Store)
-# ---------------------------------------------------------
-databases:
+  # ---------------------------------------------------------
+  # 7. REDIS (Managed Cache)
+  # ---------------------------------------------------------
   - type: redis
     name: cldx-redis
     plan: free
