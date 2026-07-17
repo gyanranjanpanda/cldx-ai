@@ -1,10 +1,10 @@
 services:
   # ---------------------------------------------------------
-  # 1. API GATEWAY (Public Web Service)
+  # 1. API GATEWAY
   # ---------------------------------------------------------
   - type: web
     name: cldx-gateway
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install && cd gateway && npm install
@@ -43,7 +43,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: cldx-auth
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install && cd services/auth && npm install
@@ -71,7 +71,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: cldx-chat
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install && cd services/chat && npm install
@@ -87,7 +87,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: cldx-agent
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install && cd services/agent && npm install
@@ -133,7 +133,7 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: cldx-billing
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install && cd services/billing && npm install
@@ -154,11 +154,11 @@ services:
   # ---------------------------------------------------------
   - type: web
     name: cldx-frontend
-    env: static
+    runtime: static
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishPath: ./dist
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_FIREBASE_API_KEY
         value: AIzaSyD5CDYsJnDgY48ZPbTaqI5wFjoZXhIz8WA
@@ -184,3 +184,7 @@ services:
   - type: keyvalue
     name: cldx-redis
     plan: free
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+    maxmemoryPolicy: noeviction
