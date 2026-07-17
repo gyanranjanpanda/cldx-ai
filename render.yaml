@@ -14,7 +14,7 @@ services:
         value: 10000
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: cldx-redis
           property: connectionString
       - key: AUTH_SERVICE
@@ -39,7 +39,7 @@ services:
           property: host
 
   # ---------------------------------------------------------
-  # 2. AUTH SERVICE (Web Service)
+  # 2. AUTH SERVICE
   # ---------------------------------------------------------
   - type: web
     name: cldx-auth
@@ -53,7 +53,7 @@ services:
         value: 10000
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: cldx-redis
           property: connectionString
       - key: MONGODB_URL
@@ -67,7 +67,7 @@ services:
         value: '{"type":"service_account","project_id":"cortai-33071","private_key_id":"832894000053116941af65cb22b92b5143ee683b","private_key":"-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDTYGE6RTg3zIXS\n5wl9UXsv5Pq4r77GPVNTUKiFpOLrNP2JvPVoYD6P6uXNld40BzPOb73C9bc6ckM9\nKa8aRvTGl1K0wXlqabFJkO3QT4v+uyZhFO5dlUqrtgEjtPypfy52eINQPCsEyQjm\nDMw71yxlCIahGqyqKAlN/XNFkhZpnioElN4DDjC44Cm32WYc8qSKykd4Wrw86I+B\nV8AE0j6T1vMDGBrYo1u+UD97WlPlvz2xHVgla4vcPdPdUoEJVaOLrX8KQTnB7f4e\nSww1hwEYPSwI4BOy/aR+HrIQYkVdhiwbtU4igcnvX16evq87rUVvLTBdKEB4xpxW\nAtDObaFZAgMBAAECggEAQIqeRXebSdZmSlaHXD+D+MTXFYt8GfXhun/XZS9Kpn0A\nqY0L9fnlQHZ+Ar8vIP3OAMu3yo7SisMW6tcOg1yFIxpTg6PL2gU5v/fD1aZkXbxx\nZJVKj0KlkTa6tFdwCqUt37i+h8JHdGeaEvx3ZBI4mQT4brrBXBdrd+faybRoqYi2\nkkd6nNRYnNjkTGBpuU3Op4I8G5nc293QLROuhFY5S64w7gmv8BDIHRZS2sX3HCr/\n2ejiffBolLXUN1vq2SGjo28PeeEXUtrVS37L59fbA9T9+SYyJjf1ucEjYkt83vsx\nqfVY2MEn5Pp66gpXDjDAs1X0zoyxBm1zqSXu0u6hPQKBgQD1dYbRxFTZTqg2i0sJ\nkTKiVECkjMQmvnwaVva87Yu8kNnB1su0Qcf+cbLg3V6TqIqeOOMO0ro3OZDmakot\nMU+zpu9x2euMysSEsqXvLeEczFiSm96OZiA/BblTwxlIW8ABuq+dsOTzWc+G/+tq\nyW1XhyFoR9WMSRUpcn0gLhR9hwKBgQDcdCnV5YTpBZ77iYa5CusIK6b5v4rcFsDx\nHjOt01kdEEmYvfA9lAU7yIwgHAWg65J/WQDhFpRv/DvZ+d5gcby51FvDqx1BjnMY\njEdV+djzR/CaAzFzvjWHHpQMUay7oP6WSSM7DeQ287AOazcW8p3lIRtmY8ajni4N\nFmRqciWiHwKBgAduR2aSSv9JIk6EaQEhJCdF5a8Vk9qYaalieJW/mztaJz13AzOx\nyhwp1QB5syNFNu0TS8xnFLwXQgu3rAcyNvd5VkZcEoVwngJmZh+Xg/kbNpM5pMMq\n1E8UHUgr39gQ7v8eZ7KeaE/1qBKuLLJO5sB/lsNRaWWV0M4waRlQS86BAoGANoYg\nhr+ilMOII6xK/t89bCLnxGNkY7TY+Ym/vGFGbBLIMRfhIEnI1ZVvWs2zcq5w6EBK\nIGGmSuA2qV3Ma0wWIlvsakObE8i4nLytNA18ZAdJ8b2ScI79zDJ66WUV9L4H2YGz\nTfrMk+7Hf3lzAaD1/mKm1TcePP91YlVEdrNOrX8CgYAVfWXqyTHfYWpmqIxj51Il\nq5FA/DyeTojssHxeenCVwtt2ihFRHcKl4xyvS5K5nw0w/gIHWHrbEwxd1Gs0+JDJ\nWhoqHDNyDw0qbi2Tq1YBOlXk8TDOoB5/O4BQqszsaXwMVkTp7FSAouEu24IDETF9\nDA457NKYnu8lDyyeQSVQaw==\n-----END PRIVATE KEY-----\n","client_email":"firebase-adminsdk-fbsvc@cortai-33071.iam.gserviceaccount.com","client_id":"104494734274999112828","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40cortai-33071.iam.gserviceaccount.com","universe_domain":"googleapis.com"}'
 
   # ---------------------------------------------------------
-  # 3. CHAT SERVICE (Web Service)
+  # 3. CHAT SERVICE
   # ---------------------------------------------------------
   - type: web
     name: cldx-chat
@@ -83,7 +83,7 @@ services:
         value: mongodb+srv://sanupanda141_db_user:xmfykGyJ6xeiyjjH@cluster0.k4xqecp.mongodb.net/cortex_chat?retryWrites=true&w=majority&appName=Cluster0
 
   # ---------------------------------------------------------
-  # 4. AGENT SERVICE (Web Service)
+  # 4. AGENT SERVICE
   # ---------------------------------------------------------
   - type: web
     name: cldx-agent
@@ -97,7 +97,7 @@ services:
         value: 10000
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: cldx-redis
           property: connectionString
       - key: MONGODB_URL
@@ -129,7 +129,7 @@ services:
           property: host
 
   # ---------------------------------------------------------
-  # 5. BILLING SERVICE (Web Service)
+  # 5. BILLING SERVICE
   # ---------------------------------------------------------
   - type: web
     name: cldx-billing
@@ -158,7 +158,7 @@ services:
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    publishPath: ./dist
     envVars:
       - key: VITE_FIREBASE_API_KEY
         value: AIzaSyD5CDYsJnDgY48ZPbTaqI5wFjoZXhIz8WA
@@ -179,9 +179,8 @@ services:
           property: host
 
   # ---------------------------------------------------------
-  # 7. REDIS (Managed Key-Value Store)
+  # 7. REDIS KEY-VALUE STORE
   # ---------------------------------------------------------
-  - type: redis
+  - type: keyvalue
     name: cldx-redis
     plan: free
-    maxmemoryPolicy: noeviction
