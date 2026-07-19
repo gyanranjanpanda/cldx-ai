@@ -100,27 +100,13 @@ export const login = async (
       60 * 60 * 24 * 7
     );
 
-    res.cookie(
-
-      "session",
-
-      sessionId,
-
-      {
-        httpOnly: true,
-
-        secure: false,
-
-        sameSite: "lax",
-
-        maxAge:
-          1000 *
-          60 *
-          60 *
-          24 *
-          7,
-      }
-    );
+    const isProd = process.env.NODE_ENV === "production";
+    res.cookie("session", sessionId, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
 
     return res.json({
 
@@ -160,14 +146,12 @@ export const logout =
 
       }
 
-      res.clearCookie(
-        "session",
-        {
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax"
-        }
-      );
+      const isProd = process.env.NODE_ENV === "production";
+      res.clearCookie("session", {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? "none" : "lax",
+      });
 
       return res.status(200).json({
 
