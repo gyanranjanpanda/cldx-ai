@@ -1,5 +1,5 @@
 import fs from "fs";
-import {PDFParse} from "pdf-parse";
+import pdfParse from "pdf-parse";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { createVectorStore } from "../utils/vectorStore.js";
 import {
@@ -19,18 +19,9 @@ export const pdfRagAgent = async (state) => {
         state.file.path
       );
 
-    const pdf =
-      new PDFParse({
+    const result = await pdfParse(buffer);
 
-        data: buffer
-
-      });
-
-    const result =
-      await pdf.getText();
-
-    const text =
-      result.text;
+    const text = result.text;
 
     const splitter =
       new RecursiveCharacterTextSplitter({
