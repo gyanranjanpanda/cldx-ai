@@ -1,6 +1,7 @@
 // Must be first — patches Node.js globals for LangChain/LangGraph
 import "./services/agent/utils/polyfill.js";
 
+import jwt from "jsonwebtoken";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -10,6 +11,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
+
 
 dotenv.config();
 
@@ -66,23 +68,17 @@ app.use("/api/agent/preview", (req, res, next) => {
   next();
 });
 
-// ─── Auth Middleware (from gateway) ─────────────────────────────────────────
-import redis from "./shared/redis/redis.js";
+// ─── Auth Middleware (JWT-based — survives restarts, no Redis needed) ──────────
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-prod";
 
-const protect = async (req, res, next) => {
+const protect = (req, res, next) => {
   try {
-    const sessionId = req?.cookies?.session;
-    if (!sessionId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const session = await redis.get(`session:${sessionId}`);
-    if (!session) {
-      return res.status(401).json({ message: "Session Expired" });
-    }
-    req.user = JSON.parse(session);
+    const token = req?.cookies?.session;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    req.user = jwt.verify(token, JWT_SECRET);
     next();
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch {
+    return res.status(401).json({ message: "Session Expired" });
   }
 };
 

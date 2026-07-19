@@ -37,3 +37,4 @@ temp/
 backend/gateway/uploads/*
 !backend/gateway/uploads/.gitkeep
 backend/package-lock.json
+.vercel
