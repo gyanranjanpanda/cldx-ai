@@ -97,7 +97,17 @@ Generate code,
 debug code,
 build projects,
 architecture,
-API design.
+API design,
+React apps,
+Next.js apps,
+Vue apps,
+Svelte apps,
+Angular apps,
+Astro apps,
+browser games,
+HTML websites,
+Markdown documents,
+Mermaid diagrams.
 
 pdf:
 Questions about generate PDFs
@@ -113,6 +123,8 @@ chat
 search
 coding
 pdf
+ppt
+image
 
 User Query:
 

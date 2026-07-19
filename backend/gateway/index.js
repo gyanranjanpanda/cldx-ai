@@ -21,9 +21,18 @@ app.use(
   express.static("uploads")
 );
 app.use(helmet());
+app.use("/api/agent/preview", (req, res, next) => {
+  res.removeHeader("Content-Security-Policy");
+  res.removeHeader("X-Frame-Options");
+  res.removeHeader("Cross-Origin-Resource-Policy");
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
 app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({
+  limit: "10mb"
+}));
 app.use("/api/auth", proxy(process.env.AUTH_SERVICE, {
   userResHeaderDecorator(headers) {
     // Forward Set-Cookie from auth service through the gateway to the browser

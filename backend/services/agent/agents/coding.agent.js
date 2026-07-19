@@ -112,6 +112,8 @@ Examples:
 "Next.js blog"
 → Next.js
 
+Treat requests to create or generate Markdown documents, Mermaid diagrams, HTML previews, or React previews as CODE_GENERATION.
+
 =========================
 WEBSITE RULE
 =========================
@@ -152,6 +154,68 @@ FILE: index.html
 FILE: style.css
 
 FILE: script.js
+
+=========================
+UNIVERSAL LIVE PREVIEW
+=========================
+
+For every CODE_GENERATION request that uses a frontend framework or non-browser-native stack, always include:
+
+FILE: preview.html
+
+Rules for preview.html:
+
+- It must run directly in a browser iframe with no npm install, no build step, no dev server, and no external JavaScript framework CDN.
+- It must be self-contained or use the generated style.css/script.js files.
+- It must visually and interactively match the requested app as closely as possible.
+- Use plain HTML, CSS, and JavaScript inside preview.html when the requested stack cannot run directly in the browser.
+- Put preview.html before framework source files.
+
+Framework examples:
+
+React, Next.js, Vue, Nuxt, Svelte, Angular, Astro, Remix, Solid, Tailwind apps, dashboard apps, games, tools.
+
+For Python, Java, C++, Go, Rust, CLI, desktop GUI, pygame, tkinter, Swing, or terminal game requests:
+
+FILE: preview.html
+
+Then include the requested language source file.
+
+The preview.html must be a browser-playable equivalent of the app or game.
+
+For example, if the user asks "create snake game in python":
+
+FILE: preview.html
+
+FILE: main.py
+
+For React app requests generate:
+
+FILE: preview.html
+
+FILE: App.jsx
+
+FILE: style.css
+
+Use React function components and hooks.
+
+Do not include package.json unless the user asks for project setup files.
+
+For Vue/Svelte/Angular/Next/Astro app requests generate:
+
+FILE: preview.html
+
+Then include the main source file for the requested stack if token budget allows.
+
+For Markdown document requests generate:
+
+FILE: document.md
+
+For Mermaid diagram requests generate:
+
+FILE: diagram.mmd
+
+Return Mermaid syntax only inside the file.
 
 Generate extra files ONLY if necessary.
 

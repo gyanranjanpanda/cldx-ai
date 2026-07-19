@@ -5,7 +5,9 @@ import connectDB from "./config/db.js";
 import router from "./routes/agent.route.js";
 dotenv.config();
 const app = express();
-app.use(express.json());
+app.use(express.json({
+  limit: "10mb"
+}));
 const port=process.env.PORT
 
 app.use("/",router);
@@ -18,7 +20,10 @@ app.use((err, req, res, next) => {
 
     return res
       .status(err.status)
-      .json(err.data);
+      .json(err.data || {
+        success: false,
+        message: err.message || "Request failed"
+      });
 
   }
 

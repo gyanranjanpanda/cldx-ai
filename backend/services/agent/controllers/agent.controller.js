@@ -2,6 +2,7 @@ import redis from "../../../shared/redis/redis.js";
 import { graph } from "../graph/supervisor.graph.js";
 import { addMessage } from "../utils/memory.js";
 import axios from "axios"
+import { enrichArtifacts } from "../preview/artifactDetector.js";
 
 export const chat =
 async(req,res,next)=>{
@@ -58,6 +59,11 @@ await axios.post(`${process.env.CHAT_SERVICE}/save-message`,{
 
   console.log("after res",result)
 
+  const artifacts =
+  enrichArtifacts(
+   result.artifacts || []
+  );
+
   await addMessage(
  conversationId,
  "assistant",
@@ -71,7 +77,7 @@ await axios.post(
   content:result.response,
   images:result.images,
   artifacts:
-  result.artifacts || []
+  artifacts
  }
 )
 
@@ -83,7 +89,7 @@ await axios.post(
  result.response,
  images:result.images,
  artifacts:
- result.artifacts || []
+ artifacts
 
 });
 

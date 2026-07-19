@@ -182,7 +182,25 @@ response: `
 📥 [Download PDF](${downloadUrl})
 
 ⏳ Link expires in 10 minutes.
-`.trim()
+`.trim(),
+
+artifacts: [
+  {
+    id: Date.now(),
+    type: "pdf",
+    title: generatedTitle,
+    url: downloadUrl,
+    mimeType: "application/pdf",
+    files: [
+      {
+        name: fileName,
+        url: downloadUrl,
+        mimeType: "application/pdf"
+      }
+    ],
+    createdAt: new Date().toISOString()
+  }
+]
 
     };
 

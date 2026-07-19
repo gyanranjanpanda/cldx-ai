@@ -1,11 +1,20 @@
 import mongoose from "mongoose";
 
+const mixedSchema =
+mongoose.Schema.Types.Mixed;
+
 const fileSchema =
 new mongoose.Schema({
 
   name:String,
 
-  content:String
+  content:String,
+
+  url:String,
+
+  mimeType:String,
+
+  size:Number
 
 },{
   _id:false
@@ -19,6 +28,14 @@ new mongoose.Schema({
   type:String,
 
   title:String,
+
+  url:String,
+
+  mimeType:String,
+
+  preview:mixedSchema,
+
+  manifest:mixedSchema,
 
   files:[fileSchema],
 
