@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // ─── In-Memory Fallback ───────────────────────────────────────────────────────
-// Used when REDIS_URL is not set (e.g. local dev without Redis or Render free tier).
-// Sessions are stored in process memory — lost on restart but fully functional.
+// Used when REDIS_URL is not set (e.g. local dev without Redis or Render/Railway free tier).
+// Stores sessions and rate limits in process memory — fully compatible with ioredis.
 class MemoryStore {
   constructor() {
     this.store = new Map();
@@ -31,6 +31,35 @@ class MemoryStore {
     return 1;
   }
 
+  async incr(key) {
+    const entry = this.store.get(key);
+    let val = 0;
+    if (entry && (!entry.expiresAt || Date.now() < entry.expiresAt)) {
+      val = parseInt(entry.value, 10) || 0;
+    }
+    val += 1;
+    this.store.set(key, { value: String(val), expiresAt: entry?.expiresAt || null });
+    return val;
+  }
+
+  async expire(key, seconds) {
+    const entry = this.store.get(key);
+    if (!entry) return 0;
+    entry.expiresAt = Date.now() + seconds * 1000;
+    this.store.set(key, entry);
+    return 1;
+  }
+
+  async ttl(key) {
+    const entry = this.store.get(key);
+    if (!entry) return -2;
+    if (entry.expiresAt) {
+      const remaining = Math.round((entry.expiresAt - Date.now()) / 1000);
+      return remaining > 0 ? remaining : -2;
+    }
+    return -1;
+  }
+
   on(event, cb) {
     if (event === "connect") cb();
     return this;
@@ -44,7 +73,7 @@ if (process.env.REDIS_URL) {
   redis.on("connect", () => console.log("✅ Redis Connected"));
   redis.on("error", (err) => console.error("Redis error:", err.message));
 } else {
-  console.warn("⚠️  REDIS_URL not set — using in-memory session store");
+  console.warn("⚠️  REDIS_URL not set — using in-memory session/rate-limit store");
   redis = new MemoryStore();
 }
 
