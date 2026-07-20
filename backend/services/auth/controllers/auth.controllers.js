@@ -4,7 +4,7 @@ import { getAuth } from "firebase-admin/auth";
 import User from "../models/user.model.js";
 import { app } from "../config/firebase.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString("hex");
+import { JWT_SECRET } from "../../../shared/jwt.js";
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
 const IS_PROD = process.env.NODE_ENV === "production";
 

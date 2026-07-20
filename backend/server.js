@@ -2,6 +2,7 @@
 import "./services/agent/utils/polyfill.js";
 
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "./shared/jwt.js";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -69,8 +70,6 @@ app.use("/api/agent/preview", (req, res, next) => {
 });
 
 // ─── Auth Middleware (JWT-based — survives restarts, no Redis needed) ──────────
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-in-prod";
-
 const protect = (req, res, next) => {
   try {
     const token = req?.cookies?.session;

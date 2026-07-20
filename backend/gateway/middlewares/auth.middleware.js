@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "";
+import { JWT_SECRET } from "../../shared/jwt.js";
 
 export const protect = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ export const protect = async (req, res, next) => {
     let decoded;
     try {
       // Try JWT verification first (new format)
-      decoded = jwt.verify(sessionToken, JWT_SECRET || require("crypto").randomBytes(32).toString("hex"));
+      decoded = jwt.verify(sessionToken, JWT_SECRET);
     } catch {
       return res.status(401).json({ message: "Session Expired" });
     }
