@@ -74,7 +74,11 @@ const protect = (req, res, next) => {
   try {
     const token = req?.cookies?.session;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
-    req.user = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    if (decoded && (decoded.userId || decoded._id)) {
+      req.headers["x-user-id"] = String(decoded.userId || decoded._id);
+    }
     next();
   } catch {
     return res.status(401).json({ message: "Session Expired" });

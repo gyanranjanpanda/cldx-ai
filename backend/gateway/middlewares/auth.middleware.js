@@ -19,6 +19,9 @@ export const protect = async (req, res, next) => {
     }
 
     req.user = decoded;
+    if (decoded && (decoded.userId || decoded._id)) {
+      req.headers["x-user-id"] = String(decoded.userId || decoded._id);
+    }
     next();
   } catch (error) {
     return res.status(500).json({ message: error.message });
